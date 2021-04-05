@@ -1,0 +1,38 @@
+version: "3.7"
+
+services:
+  database_ignite:
+    image: postgres
+    container_name: database_desafio1
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=queries_challenge
+    volumes:
+      - pgdata:/data/postgres
+    networks:
+      desafio:
+        ipv4_address: 172.24.0.3
+  app:
+    build: .
+    container_name: desafio1
+    ports:
+      - 3333:3333
+    volumes:
+      - .:/user/app
+    networks:
+      - desafio
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  desafio:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.24.0.0/24
